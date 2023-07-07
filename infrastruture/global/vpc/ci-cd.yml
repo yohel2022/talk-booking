@@ -17,6 +17,12 @@ before_script:
 script:
 - gitlab-terraform init
 - gitlab-terraform validate
+only:
+refs:
+- merge_requests
+- main
+changes:
+- infrastructure/global/vpc/**/*
 vpc-plan:
 extends: .vpc-job
 stage: plan
@@ -31,6 +37,12 @@ paths:
 - ${TF_ROOT}/plan.cache
 reports:
 terraform: ${TF_ROOT}/plan.json
+only:
+refs:
+- merge_requests
+- main
+changes:
+- infrastructure/global/vpc/**/*
 vpc-apply:
 extends: .vpc-job
 stage: apply
@@ -43,3 +55,8 @@ script:
 dependencies:
 - vpc-plan
 when: manual
+only:
+refs:
+- main
+changes:
+- infrastructure/global/vpc/**/*
